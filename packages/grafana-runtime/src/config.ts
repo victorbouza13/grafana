@@ -18,6 +18,8 @@ import {
   getThemeById,
   AngularMeta,
   PluginLoadingStrategy,
+  PluginDependencies,
+  PluginExtensions,
   PluginType,
 } from '@grafana/data';
 
@@ -43,6 +45,8 @@ export type AppPluginConfig = {
   preload: boolean;
   angular: AngularMeta;
   loadingStrategy: PluginLoadingStrategy;
+  dependencies: PluginDependencies;
+  extensions: PluginExtensions;
 };
 
 export type PreinstalledPlugin = {
