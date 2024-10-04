@@ -127,11 +127,13 @@ export function InstallControlsButton({
     uninstallTitle = 'Preinstalled plugin. Remove from Grafana config before uninstalling.';
   }
 
-  let modalBody = 'Are you sure you want to uninstall this plugin?';
-  if (config.pluginDependants && config.pluginDependants[plugin.id]) {
-    const dependencyOf = config.pluginDependants[plugin.id].map((dep) => dep.pluginName).join(', ');
-    if (dependencyOf) {
-      modalBody = `This plugin is a dependency of the following plugin(s): ${dependencyOf}. Are you sure you want to uninstall this plugin?`;
+  let uninstallToolTipText = '';
+  if (plugin.isDependency) {
+    if (config.pluginDependants && config.pluginDependants[plugin.id]) {
+      const dependencyOf = config.pluginDependants[plugin.id].map((dep) => dep.pluginName);
+
+      disableUninstall = true;
+      uninstallToolTipText = `Cannot uninstall a plugin dependency. You must remove ${dependencyOf.join(', ')} first.`;
     }
   }
 
@@ -141,14 +143,20 @@ export function InstallControlsButton({
         <ConfirmModal
           isOpen={isConfirmModalVisible}
           title={`Uninstall ${plugin.name}`}
-          body={modalBody}
+          body="Are you sure you want to uninstall this plugin?"
           confirmText="Confirm"
           icon="exclamation-triangle"
           onConfirm={onUninstall}
           onDismiss={hideConfirmModal}
         />
         <Stack alignItems="flex-start" width="auto" height="auto">
-          <Button variant="destructive" disabled={disableUninstall} onClick={showConfirmModal} title={uninstallTitle}>
+          <Button
+            variant="destructive"
+            disabled={disableUninstall}
+            onClick={showConfirmModal}
+            title={uninstallTitle}
+            tooltip={uninstallToolTipText}
+          >
             {uninstallBtnText}
           </Button>
         </Stack>
@@ -174,7 +182,13 @@ export function InstallControlsButton({
             {isInstalling ? 'Updating' : 'Update'}
           </Button>
         )}
-        <Button variant="destructive" disabled={disableUninstall} onClick={showConfirmModal} title={uninstallTitle}>
+        <Button
+          variant="destructive"
+          disabled={disableUninstall}
+          onClick={showConfirmModal}
+          title={uninstallTitle}
+          tooltip={uninstallToolTipText}
+        >
           {uninstallBtnText}
         </Button>
       </Stack>
