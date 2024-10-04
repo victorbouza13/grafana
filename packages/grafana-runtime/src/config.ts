@@ -47,6 +47,7 @@ export type AppPluginConfig = {
   loadingStrategy: PluginLoadingStrategy;
   dependencies: PluginDependencies;
   extensions: PluginExtensions;
+  moduleHash?: string;
 };
 
 export type PreinstalledPlugin = {
