@@ -34,6 +34,7 @@ func NewGrpcAuthenticator(cfg *setting.Cfg, tracer tracing.Tracer) (*authnlib.Gr
 	grpcOpts := []authnlib.GrpcAuthenticatorOption{
 		authnlib.WithIDTokenAuthOption(true),
 		authnlib.WithKeyRetrieverOption(keyRetriever),
+		authnlib.WithTracerAuthOption(tracer),
 	}
 	if authCfg.Mode == ModeOnPrem {
 		grpcOpts = append(grpcOpts,
