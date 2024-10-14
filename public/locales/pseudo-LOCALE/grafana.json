@@ -1980,6 +1980,9 @@
   },
   "plugins": {
     "catalog": {
+      "uninstall": {
+        "confirmation": "Åřę yőū şūřę yőū ŵäŉŧ ŧő ūŉįŉşŧäľľ "
+      },
       "update-all": {
         "all-plugins-updated": "Åľľ pľūģįŉş ūpđäŧęđ!",
         "available-header": "Åväįľäþľę",

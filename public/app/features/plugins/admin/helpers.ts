@@ -1,13 +1,6 @@
 import uFuzzy from '@leeoniya/ufuzzy';
 
-import {
-  PluginSignatureStatus,
-  dateTimeParse,
-  PluginError,
-  PluginType,
-  PluginErrorCode,
-  PluginDependencies,
-} from '@grafana/data';
+import { PluginSignatureStatus, dateTimeParse, PluginError, PluginType, PluginErrorCode } from '@grafana/data';
 import { config, featureEnabled } from '@grafana/runtime';
 import configCore, { Settings } from 'app/core/config';
 import { contextSrv } from 'app/core/core';
@@ -160,7 +153,10 @@ export function mapRemoteToCatalog(plugin: RemotePlugin, error?: PluginError): C
     angularDetected,
     isFullyInstalled: isDisabled,
     latestVersion: plugin.version,
-    hasPluginDependency: hasPluginDependencies(plugin.json?.dependencies),
+    details: {
+      pluginDependencies: plugin.json?.dependencies?.plugins || [],
+      links: plugin.json?.info.links || [],
+    },
     isDependency: isDependencyPlugin(id),
   };
 }
@@ -213,7 +209,10 @@ export function mapLocalToCatalog(plugin: LocalPlugin, error?: PluginError): Cat
     iam: plugin.iam,
     latestVersion: plugin.latestVersion,
     isDependency: isDependencyPlugin(id),
-    hasPluginDependency: hasPluginDependencies(plugin.dependencies),
+    details: {
+      pluginDependencies: plugin.dependencies.plugins || [],
+      links: plugin.info.links || [],
+    },
   };
 }
 
@@ -278,14 +277,11 @@ export function mapToCatalogPlugin(local?: LocalPlugin, remote?: RemotePlugin, e
     iam: local?.iam,
     latestVersion: local?.latestVersion || remote?.version || '',
     isDependency: isDependencyPlugin(id),
-    hasPluginDependency: local
-      ? hasPluginDependencies(local.dependencies)
-      : hasPluginDependencies(remote?.json?.dependencies),
+    details: {
+      pluginDependencies: local?.dependencies.plugins || remote?.json?.dependencies?.plugins || [],
+      links: local?.info.links || remote?.json?.info.links || [],
+    },
   };
-}
-
-function hasPluginDependencies(pd: PluginDependencies | undefined): boolean {
-  return Boolean(pd?.plugins && pd?.plugins?.length > 0);
 }
 
 export const getExternalManageLink = (pluginId: string) => `${config.pluginCatalogURL}${pluginId}`;

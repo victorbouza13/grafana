@@ -1980,6 +1980,9 @@
   },
   "plugins": {
     "catalog": {
+      "uninstall": {
+        "confirmation": "Are you sure you want to uninstall "
+      },
       "update-all": {
         "all-plugins-updated": "All plugins updated!",
         "available-header": "Available",

@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom-v5-compat';
 import { AppEvents } from '@grafana/data';
 import { config, locationService, reportInteraction } from '@grafana/runtime';
 import { Button, ConfirmModal, Stack } from '@grafana/ui';
+import { Trans } from '@grafana/ui/src/utils/i18n';
 import appEvents from 'app/core/app_events';
 import configCore from 'app/core/config';
 import { useQueryParams } from 'app/core/hooks/useQueryParams';
@@ -108,31 +109,6 @@ export function InstallControlsButton({
     }
   };
 
-  const onUninstallPluginDependency = async (pluginId: string) => {
-    hideConfirmModal();
-    trackPluginUninstalled(trackingProps);
-    await uninstall(pluginId);
-    if (!errorUninstalling) {
-      // If an app plugin is uninstalled we need to reset the active tab when the config / dashboards tabs are removed.
-      const activePageId = queryParams.page;
-      const isViewingAppConfigPage = activePageId !== PluginTabIds.OVERVIEW && activePageId !== PluginTabIds.VERSIONS;
-      if (isViewingAppConfigPage) {
-        locationService.replace(`${location.pathname}?page=${PluginTabIds.OVERVIEW}`);
-      }
-
-      let successMessage = `Uninstalled ${pluginId}`;
-      if (config.pluginAdminExternalManageEnabled && configCore.featureToggles.managedPluginsInstall) {
-        successMessage = 'Uninstall requested, this may take a few minutes.';
-      }
-
-      appEvents.emit(AppEvents.alertSuccess, [successMessage]);
-      if (plugin.type === 'app') {
-        dispatch(removePluginFromNavTree({ pluginID: pluginId }));
-        setNeedReload?.(false);
-      }
-    }
-  };
-
   const onUpdate = async () => {
     reportInteraction(PLUGIN_UPDATE_INTERACTION_EVENT_NAME);
 
@@ -169,14 +145,17 @@ export function InstallControlsButton({
           title={`Uninstall ${plugin.name}`}
           body={
             <>
-              <p>
-                Are you sure you want to uninstall <strong>{plugin.name}</strong>?
-              </p>
-              {plugin.hasPluginDependency && ( // replace with richer dependency info
-                <Stack alignItems="flex-start" width="auto" height="auto">
-                  <Button variant="destructive" onClick={() => onUninstallPluginDependency('grafana-piechart-panel')}>
-                    {uninstallBtnText} plugin dependency {'grafana-piechart-panel'}
-                  </Button>
+              <p></p>
+              <Trans i18nKey="plugins.catalog.uninstall.confirmation">Are you sure you want to uninstall </Trans>
+              <strong>{plugin.name}</strong>?
+              {plugin.details?.pluginDependencies && (
+                <Stack>
+                  {plugin.details.pluginDependencies.map((dep) => (
+                    <div key={dep.id}>
+                      <input type="checkbox" id={dep.id} name={dep.id} value={dep.id} />
+                      <label htmlFor={dep.id}>{dep.name}</label>
+                    </div>
+                  ))}
                 </Stack>
               )}
             </>

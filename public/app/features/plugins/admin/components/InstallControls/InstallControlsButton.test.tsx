@@ -34,7 +34,6 @@ const plugin: CatalogPlugin = {
   isPublished: true,
   isManaged: false,
   isPreinstalled: { found: false, withVersion: false },
-  hasPluginDependency: false,
   isDependency: false,
 };
 
