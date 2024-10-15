@@ -1984,7 +1984,8 @@
   "plugins": {
     "catalog": {
       "uninstall": {
-        "confirmation": "Åřę yőū şūřę yőū ŵäŉŧ ŧő ūŉįŉşŧäľľ "
+        "confirmation": "Åřę yőū şūřę yőū ŵäŉŧ ŧő ūŉįŉşŧäľľ ",
+        "dependencies": "Ŧĥę ƒőľľőŵįŉģ đępęŉđęŉčy pľūģįŉş ŵįľľ äľşő þę ūŉįŉşŧäľľęđ:"
       },
       "update-all": {
         "all-plugins-updated": "Åľľ pľūģįŉş ūpđäŧęđ!",

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom-v5-compat';
 
 import { AppEvents } from '@grafana/data';
 import { config, locationService, reportInteraction } from '@grafana/runtime';
-import { Button, ConfirmModal, Stack } from '@grafana/ui';
+import { Button, Checkbox, ConfirmModal, Stack } from '@grafana/ui';
 import { Trans } from '@grafana/ui/src/utils/i18n';
 import appEvents from 'app/core/app_events';
 import configCore from 'app/core/config';
@@ -131,11 +131,14 @@ export function InstallControlsButton({
   let uninstallToolTipText = '';
   if (plugin.isDependency) {
     if (config.pluginDependants && config.pluginDependants[plugin.id]) {
+      // TODO && parent plugin is still installed
       const dependencyOf = config.pluginDependants[plugin.id].map((dep) => dep.pluginName);
       disableUninstall = true;
       uninstallTitle = `Dependent plugins must be removed first: ${dependencyOf.join(', ')}`;
     }
   }
+
+  function onChangePluginDependencyUninstall() {}
 
   if (pluginStatus === PluginStatus.UNINSTALL) {
     return (
@@ -145,18 +148,25 @@ export function InstallControlsButton({
           title={`Uninstall ${plugin.name}`}
           body={
             <>
-              <p></p>
               <Trans i18nKey="plugins.catalog.uninstall.confirmation">Are you sure you want to uninstall </Trans>
-              <strong>{plugin.name}</strong>?
+              <strong>{plugin.name}</strong>?<p></p>
               {plugin.details?.pluginDependencies && (
-                <Stack>
-                  {plugin.details.pluginDependencies.map((dep) => (
-                    <div key={dep.id}>
-                      <input type="checkbox" id={dep.id} name={dep.id} value={dep.id} />
-                      <label htmlFor={dep.id}>{dep.name}</label>
-                    </div>
-                  ))}
-                </Stack>
+                <>
+                  <Trans i18nKey="plugins.catalog.uninstall.dependencies">
+                    The following dependency plugins will also be uninstalled:
+                  </Trans>
+                  <Stack>
+                    {plugin.details.pluginDependencies.map((dep) => (
+                      <Checkbox
+                        key={dep.id}
+                        label={dep.name}
+                        name={dep.id}
+                        value={true}
+                        onChange={onChangePluginDependencyUninstall}
+                      />
+                    ))}
+                  </Stack>
+                </>
               )}
             </>
           }
@@ -166,7 +176,7 @@ export function InstallControlsButton({
           onDismiss={hideConfirmModal}
         />
         <Stack alignItems="flex-start" width="auto" height="auto">
-          <Button variant="destructive" onClick={showConfirmModal}>
+          <Button variant="destructive" disabled={disableUninstall} onClick={showConfirmModal} title={uninstallTitle}>
             {uninstallBtnText}
           </Button>
         </Stack>

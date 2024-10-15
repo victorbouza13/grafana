@@ -278,7 +278,7 @@ export function mapToCatalogPlugin(local?: LocalPlugin, remote?: RemotePlugin, e
     latestVersion: local?.latestVersion || remote?.version || '',
     isDependency: isDependencyPlugin(id),
     details: {
-      pluginDependencies: local?.dependencies.plugins || remote?.json?.dependencies?.plugins || [],
+      pluginDependencies: local?.dependencies?.plugins || remote?.json?.dependencies?.plugins || [],
       links: local?.info.links || remote?.json?.info.links || [],
     },
   };
