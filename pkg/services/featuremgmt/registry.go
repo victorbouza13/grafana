@@ -1349,8 +1349,8 @@ var (
 			HideFromAdminPage: true,
 		},
 		{
-			Name:              "passReloadParamsToDashboardApi",
-			Description:       "Enables the passing of scopes, time range and filters to dashboards fetching in Grafana",
+			Name:              "reloadDashboardsOnParamsChange",
+			Description:       "Enables reload of dashboards on scopes, time range and filters changes",
 			FrontendOnly:      false,
 			Stage:             FeatureStageExperimental,
 			Owner:             grafanaDashboardsSquad,
