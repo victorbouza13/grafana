@@ -127,7 +127,6 @@ export function InstallControlsButton({
     uninstallTitle = 'Preinstalled plugin. Remove from Grafana config before uninstalling.';
   }
 
-  let uninstallToolTipText = '';
   if (plugin.isDependency) {
     if (config.pluginDependants && config.pluginDependants[plugin.id]) {
       // TODO && parent plugin is still installed
@@ -176,13 +175,7 @@ export function InstallControlsButton({
             {isInstalling ? 'Updating' : 'Update'}
           </Button>
         )}
-        <Button
-          variant="destructive"
-          disabled={disableUninstall}
-          onClick={showConfirmModal}
-          title={uninstallTitle}
-          tooltip={uninstallToolTipText}
-        >
+        <Button variant="destructive" disabled={disableUninstall} onClick={showConfirmModal} title={uninstallTitle}>
           {uninstallBtnText}
         </Button>
       </Stack>
