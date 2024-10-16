@@ -111,7 +111,6 @@ func (f *AuthenticatorWithFallback) Authenticate(ctx context.Context) (context.C
 		f.metrics.fallbackCounter.WithLabelValues(fmt.Sprintf("%t", err == nil)).Inc()
 		span.SetAttributes(attribute.Bool("fallback_used", true))
 	}
-	span.End()
 	return newCtx, err
 }
 
