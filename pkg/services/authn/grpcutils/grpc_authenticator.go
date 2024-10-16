@@ -9,6 +9,7 @@ import (
 
 	authnlib "github.com/grafana/authlib/authn"
 	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/services/grpcserver/interceptors"
@@ -71,6 +72,7 @@ type AuthenticatorWithFallback struct {
 	legacyAuthenticator *grpc.Authenticator
 	fallbackEnabled     bool
 	metrics             *metrics
+	tracer              tracing.Tracer
 }
 
 func NewGrpcAuthenticatorWithFallback(cfg *setting.Cfg, reg prometheus.Registerer, tracer tracing.Tracer) (interceptors.Authenticator, error) {
@@ -91,10 +93,14 @@ func NewGrpcAuthenticatorWithFallback(cfg *setting.Cfg, reg prometheus.Registere
 		legacyAuthenticator: legacyAuthenticator,
 		fallbackEnabled:     authCfg.LegacyFallback,
 		metrics:             newMetrics(reg),
+		tracer:              tracer,
 	}, nil
 }
 
 func (f *AuthenticatorWithFallback) Authenticate(ctx context.Context) (context.Context, error) {
+	ctx, span := f.tracer.Start(ctx, "grpcutils.AuthenticatorWithFallback.Authenticate")
+	span.SetAttributes(attribute.Bool("fallback_used", false))
+	defer span.End()
 	origCtx := ctx
 	// Try to authenticate with the new authenticator first
 	ctx, err := f.authenticator.Authenticate(ctx)
@@ -105,6 +111,7 @@ func (f *AuthenticatorWithFallback) Authenticate(ctx context.Context) (context.C
 		// If the new authenticator failed and the fallback is enabled, try the legacy authenticator
 		ctx, err = f.legacyAuthenticator.Authenticate(origCtx)
 		f.metrics.fallbackCounter.WithLabelValues(fmt.Sprintf("%t", err == nil)).Inc()
+		span.SetAttributes(attribute.Bool("fallback_used", true))
 	}
 	return ctx, err
 }
