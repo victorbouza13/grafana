@@ -209,7 +209,7 @@ export function mapLocalToCatalog(plugin: LocalPlugin, error?: PluginError): Cat
     iam: plugin.iam,
     latestVersion: plugin.latestVersion,
     details: {
-      pluginDependencies: plugin.dependencies.plugins || [],
+      pluginDependencies: plugin.dependencies?.plugins || [],
       dependantPlugins: dependantPlugins(id),
       links: plugin.info.links || [],
     },
