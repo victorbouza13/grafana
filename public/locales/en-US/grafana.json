@@ -1992,10 +1992,6 @@
   },
   "plugins": {
     "catalog": {
-      "uninstall": {
-        "confirmation": "Are you sure you want to uninstall ",
-        "dependencies": "The following dependency plugins will also be uninstalled:"
-      },
       "update-all": {
         "all-plugins-updated": "All plugins updated!",
         "available-header": "Available",

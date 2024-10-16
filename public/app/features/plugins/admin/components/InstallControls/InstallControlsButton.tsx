@@ -3,8 +3,7 @@ import { useLocation } from 'react-router-dom-v5-compat';
 
 import { AppEvents } from '@grafana/data';
 import { config, locationService, reportInteraction } from '@grafana/runtime';
-import { Button, Checkbox, ConfirmModal, Stack } from '@grafana/ui';
-import { Trans } from '@grafana/ui/src/utils/i18n';
+import { Button, ConfirmModal, Stack } from '@grafana/ui';
 import appEvents from 'app/core/app_events';
 import configCore from 'app/core/config';
 import { useQueryParams } from 'app/core/hooks/useQueryParams';
@@ -138,38 +137,13 @@ export function InstallControlsButton({
     }
   }
 
-  function onChangePluginDependencyUninstall() {}
-
   if (pluginStatus === PluginStatus.UNINSTALL) {
     return (
       <>
         <ConfirmModal
           isOpen={isConfirmModalVisible}
           title={`Uninstall ${plugin.name}`}
-          body={
-            <>
-              <Trans i18nKey="plugins.catalog.uninstall.confirmation">Are you sure you want to uninstall </Trans>
-              <strong>{plugin.name}</strong>?<p></p>
-              {plugin.details?.pluginDependencies && (
-                <>
-                  <Trans i18nKey="plugins.catalog.uninstall.dependencies">
-                    The following dependency plugins will also be uninstalled:
-                  </Trans>
-                  <Stack>
-                    {plugin.details.pluginDependencies.map((dep) => (
-                      <Checkbox
-                        key={dep.id}
-                        label={dep.name}
-                        name={dep.id}
-                        value={true}
-                        onChange={onChangePluginDependencyUninstall}
-                      />
-                    ))}
-                  </Stack>
-                </>
-              )}
-            </>
-          }
+          body="Are you sure you want to uninstall this plugin?"
           confirmText="Confirm"
           icon="exclamation-triangle"
           onConfirm={onUninstall}
