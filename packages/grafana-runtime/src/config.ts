@@ -55,7 +55,7 @@ export type PreinstalledPlugin = {
   version: string;
 };
 
-type DependantInfo = {
+export type DependantInfo = {
   pluginId: string;
   pluginName: string;
   pluginVersion: string;

@@ -33,7 +33,6 @@ export default {
   updatedAt: '2021-08-25T15:03:49.000Z',
   version: '4.2.2',
   error: undefined,
-  isDependency: false,
   details: {
     grafanaDependency: '>=8.0.0',
     pluginDependencies: [],

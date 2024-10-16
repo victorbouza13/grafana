@@ -127,13 +127,11 @@ export function InstallControlsButton({
     uninstallTitle = 'Preinstalled plugin. Remove from Grafana config before uninstalling.';
   }
 
-  if (plugin.isDependency) {
-    if (config.pluginDependants && config.pluginDependants[plugin.id]) {
-      // TODO && parent plugin is still installed
-      const dependencyOf = config.pluginDependants[plugin.id].map((dep) => dep.pluginName);
-      disableUninstall = true;
-      uninstallTitle = `Dependent plugins must be removed first: ${dependencyOf.join(', ')}`;
-    }
+  // TODO && parent plugin is still installed
+  const dependencyOf = plugin.details?.dependantPlugins?.map((dep) => dep.pluginName);
+  if (dependencyOf?.length) {
+    disableUninstall = true;
+    uninstallTitle = `Dependent plugins must be removed first: ${dependencyOf.join(', ')}`;
   }
 
   if (pluginStatus === PluginStatus.UNINSTALL) {
