@@ -158,7 +158,7 @@ export function InstallControlsButton({
   }
 
   if (!plugin.isPublished || hasInstallWarning) {
-    // Cannot be updated or installed
+    // Cannot be updated/installed/uninstalled
     return null;
   }
 
