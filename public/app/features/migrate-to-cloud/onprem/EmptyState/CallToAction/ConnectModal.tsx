@@ -21,6 +21,16 @@ interface FormData {
   token: string;
 }
 
+type CreateSessionError = {
+  data: CreateSessionErrorDto;
+};
+
+function isCreateSessionError(error: unknown): error is CreateSessionError {
+  return error !== null && typeof error === 'object' && 'data' in error
+    && error.data !== null && typeof error.data === 'object'
+    && 'errorCode' in error.data && 'message' in error.data;
+}
+
 function getTMessage(errorCode: CreateSessionErrorDto['errorCode']): string {
   switch (errorCode) {
     case 'TOKEN_INVALID':
@@ -143,7 +153,7 @@ export const ConnectModal = ({ isOpen, isLoading, error, hideModal, onConfirm }:
               >
                 <Text element="p">
                   {/* TODO: how to get error data here correctly */}
-                  {getTMessage(error?.data?.errorCode) ||
+                  {isCreateSessionError(error) && getTMessage((error as CreateSessionError)?.data?.errorCode) ||
                     'There was an error saving the token. See the Grafana server logs for more details.'}
                 </Text>
               </AlertWithTraceID>
