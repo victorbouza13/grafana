@@ -1350,7 +1350,7 @@ var (
 		},
 		{
 			Name:              "reloadDashboardsOnParamsChange",
-			Description:       "Enables reload of dashboards on scopes, time range and filters changes",
+			Description:       "Enables reload of dashboards on scopes, time range and variables changes",
 			FrontendOnly:      false,
 			Stage:             FeatureStageExperimental,
 			Owner:             grafanaDashboardsSquad,
