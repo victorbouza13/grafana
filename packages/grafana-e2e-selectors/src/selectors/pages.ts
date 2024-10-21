@@ -1,4 +1,3 @@
-import { Components } from '../generated/components.gen';
 import { VersionedSelectorGroup } from '../types';
 
 import { MIN_GRAFANA_VERSION } from './constants';
@@ -6,7 +5,7 @@ import { MIN_GRAFANA_VERSION } from './constants';
 /**
  * Selectors grouped/defined in Pages
  */
-export const versionedPages: VersionedSelectorGroup = {
+export const versionedPages = {
   Alerting: {
     AddAlertRule: {
       url: {
@@ -291,7 +290,7 @@ export const versionedPages: VersionedSelectorGroup = {
             [MIN_GRAFANA_VERSION]: (dashboardUid: string) => `/d/${dashboardUid}?editview=annotations`,
           },
           addAnnotationCTAV2: {
-            [MIN_GRAFANA_VERSION]: Components.CallToActionCard.buttonV2('Add annotation query'),
+            [MIN_GRAFANA_VERSION]: 'data-testid Call to action button Add annotation query',
           },
           annotations: {
             '10.4.0': 'data-testid list-annotations',
@@ -333,7 +332,7 @@ export const versionedPages: VersionedSelectorGroup = {
             [MIN_GRAFANA_VERSION]: (dashboardUid: string) => `/d/${dashboardUid}?editview=templating`,
           },
           addVariableCTAV2: {
-            [MIN_GRAFANA_VERSION]: Components.CallToActionCard.buttonV2('Add variable'),
+            [MIN_GRAFANA_VERSION]: 'data-testid Call to action button Add variable',
           },
           newButton: {
             [MIN_GRAFANA_VERSION]: 'Variable editor New variable button',
@@ -427,8 +426,9 @@ export const versionedPages: VersionedSelectorGroup = {
           },
           QueryVariable: {
             queryOptionsDataSourceSelect: {
-              '10.4.0': Components.DataSourcePicker.inputV2,
-              [MIN_GRAFANA_VERSION]: Components.DataSourcePicker.container,
+              '10.4.0': 'data-testid Select a data source',
+              '10.0.0': 'data-testid Data source picker select container',
+              [MIN_GRAFANA_VERSION]: 'Data source picker select container',
             },
             queryOptionsRefreshSelect: {
               [MIN_GRAFANA_VERSION]: 'Variable editor Form Query Refresh select',
@@ -502,7 +502,9 @@ export const versionedPages: VersionedSelectorGroup = {
             },
           },
           GroupByVariable: {
-            dataSourceSelect: { '10.4.0': Components.DataSourcePicker.inputV2 },
+            dataSourceSelect: {
+              '10.4.0': 'data-testid Select a data source',
+            },
             infoText: {
               '10.4.0': 'data-testid group by variable info text',
             },
@@ -511,7 +513,9 @@ export const versionedPages: VersionedSelectorGroup = {
             },
           },
           AdHocFiltersVariable: {
-            datasourceSelect: { '10.4.0': Components.DataSourcePicker.inputV2 },
+            datasourceSelect: {
+              '10.4.0': 'data-testid Select a data source',
+            },
             infoText: {
               '10.4.0': 'data-testid ad-hoc filters variable info text',
             },
@@ -992,6 +996,6 @@ export const versionedPages: VersionedSelectorGroup = {
       [MIN_GRAFANA_VERSION]: (pluginId: string) => `/plugins/${pluginId}`,
     },
   },
-};
+} satisfies VersionedSelectorGroup;
 
 export type VersionedPages = typeof versionedPages;

@@ -30,6 +30,28 @@ export type VersionedFunctionSelector = Record<string, FunctionSelector>;
 
 export type VersionedStringSelector = Record<string, StringSelector>;
 
+export type VersionedCssSelector = Record<string, CssSelector>;
+
+export type VersionedUrlSelector = Record<string, UrlSelector>;
+
+export type VersionedSelectors =
+  | VersionedFunctionSelector
+  | VersionedStringSelector
+  | VersionedCssSelector
+  | VersionedUrlSelector;
+
 export type VersionedSelectorGroup = {
-  [property: string]: VersionedFunctionSelector | VersionedStringSelector | VersionedSelectorGroup;
+  [property: string]: VersionedSelectors | VersionedSelectorGroup;
+};
+
+export type SelectorsOf<T> = {
+  [Property in keyof T]: T[Property] extends VersionedFunctionSelector
+    ? FunctionSelector
+    : T[Property] extends VersionedStringSelector
+      ? StringSelector
+      : T[Property] extends VersionedCssSelector
+        ? CssSelector
+        : T[Property] extends VersionedUrlSelector
+          ? UrlSelector
+          : SelectorsOf<T[Property]>;
 };

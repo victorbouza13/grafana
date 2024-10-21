@@ -12,7 +12,7 @@ import { MIN_GRAFANA_VERSION } from './constants';
 /**
  * Selectors grouped/defined in Components
  */
-export const versionedComponents: VersionedSelectorGroup = {
+export const versionedComponents = {
   RadioButton: {
     container: {
       '10.2.3': 'data-testid radio-button',
@@ -1015,7 +1015,7 @@ export const versionedComponents: VersionedSelectorGroup = {
       [MIN_GRAFANA_VERSION]: (sectionId: string) => `data-testid Expand folder ${sectionId}`,
     },
     dashboardItem: {
-      [MIN_GRAFANA_VERSION]: (item: string) => `${Components.Search.dashboardItems} ${item}`,
+      [MIN_GRAFANA_VERSION]: (item: string) => `data-testid Dashboard search item ${item}`,
     },
     dashboardCard: {
       [MIN_GRAFANA_VERSION]: (item: string) => `data-testid Search card ${item}`,
@@ -1231,6 +1231,6 @@ export const versionedComponents: VersionedSelectorGroup = {
       '11.2.0': 'data-testid entity-not-found',
     },
   },
-};
+} satisfies VersionedSelectorGroup;
 
 export type VersionedComponents = typeof versionedComponents;

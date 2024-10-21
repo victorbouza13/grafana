@@ -1,22 +1,25 @@
 import { gte, rcompare, valid } from 'semver';
 
-import { E2ESelectorGroup } from './selectors';
-import { versionedComponents } from './selectors/components';
-import { versionedPages } from './selectors/pages';
+import { VersionedComponents, versionedComponents } from './selectors/components';
+import { VersionedPages, versionedPages } from './selectors/pages';
 import {
-  E2ESelectors,
   FunctionSelector,
   Selectors,
+  SelectorsOf,
   StringSelector,
   VersionedFunctionSelector,
   VersionedSelectorGroup,
+  VersionedSelectors,
   VersionedStringSelector,
 } from './types';
 
 /**
  * Resolves selectors based on the Grafana version
  */
-export function resolveSelectors(grafanaVersion: string): E2ESelectorGroup {
+export function resolveSelectors(grafanaVersion = 'latest'): {
+  pages: SelectorsOf<VersionedPages>;
+  components: SelectorsOf<VersionedComponents>;
+} {
   const version = grafanaVersion.replace(/\-.*/, '');
 
   return {
@@ -28,7 +31,7 @@ export function resolveSelectors(grafanaVersion: string): E2ESelectorGroup {
 function resolveSelectorGroup<T extends Selectors>(
   group: VersionedSelectorGroup,
   grafanaVersion: string
-): E2ESelectors<T> {
+): SelectorsOf<T> {
   const result: Selectors = {};
 
   for (const [key, value] of Object.entries(group)) {
@@ -45,11 +48,11 @@ function resolveSelectorGroup<T extends Selectors>(
     }
   }
 
-  return result as E2ESelectors<T>;
+  return result as SelectorsOf<T>;
 }
 
 function isVersionedFunctionSelector(
-  target: VersionedFunctionSelector | VersionedStringSelector | VersionedSelectorGroup
+  target: VersionedSelectors | VersionedSelectorGroup
 ): target is VersionedFunctionSelector {
   if (typeof target === 'object') {
     const [first] = Object.keys(target);
@@ -60,7 +63,7 @@ function isVersionedFunctionSelector(
 }
 
 function isVersionedStringSelector(
-  target: VersionedFunctionSelector | VersionedStringSelector | VersionedSelectorGroup
+  target: VersionedSelectors | VersionedSelectorGroup
 ): target is VersionedStringSelector {
   if (typeof target === 'object') {
     const [first] = Object.keys(target);
@@ -71,7 +74,7 @@ function isVersionedStringSelector(
 }
 
 function isVersionedSelectorGroup(
-  target: VersionedFunctionSelector | VersionedStringSelector | VersionedSelectorGroup
+  target: VersionedSelectors | VersionedSelectorGroup
 ): target is VersionedSelectorGroup {
   if (typeof target === 'object') {
     const [first] = Object.keys(target);
@@ -83,6 +86,10 @@ function isVersionedSelectorGroup(
 
 function resolveStringSelector(versionedSelector: VersionedStringSelector, grafanaVersion: string): StringSelector {
   let [versionToUse, ...versions] = Object.keys(versionedSelector).sort(rcompare);
+
+  if (grafanaVersion === 'latest') {
+    return versionedSelector[versionToUse];
+  }
 
   for (const version of versions) {
     if (gte(version, grafanaVersion)) {
@@ -98,6 +105,10 @@ function resolveFunctionSelector(
   grafanaVersion: string
 ): FunctionSelector {
   let [versionToUse, ...versions] = Object.keys(versionedSelector).sort(rcompare);
+
+  if (grafanaVersion === 'latest') {
+    return versionedSelector[versionToUse];
+  }
 
   for (const version of versions) {
     if (gte(version, grafanaVersion)) {
