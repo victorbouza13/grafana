@@ -43,7 +43,7 @@ module.exports = (env = {}) => {
 
     // If we enabled watch option via CLI
     watchOptions: {
-      ignored: ['/node_modules/', ...getDecoupledPlugins(), '/packages/grafana-e2e-selectors/src/generated/**'],
+      ignored: ['/node_modules/', ...getDecoupledPlugins()],
     },
 
     resolve: {
