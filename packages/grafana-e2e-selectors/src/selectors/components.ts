@@ -9,8 +9,6 @@ import { VersionedSelectorGroup } from '../types';
 
 import { MIN_GRAFANA_VERSION } from './constants';
 
-import { Components } from '.';
-
 /**
  * Selectors grouped/defined in Components
  */
@@ -793,6 +791,9 @@ export const versionedComponents: VersionedSelectorGroup = {
   NavToolbar: {
     container: {
       '9.4.0': 'data-testid Nav toolbar',
+    },
+    commandPaletteTrigger: {
+      '11.4.0': 'data-testid Command palette trigger',
     },
     shareDashboard: {
       '11.1.0': 'data-testid Share dashboard',

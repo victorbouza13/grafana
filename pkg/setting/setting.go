@@ -175,12 +175,12 @@ type Cfg struct {
 	// CSPReportEnabled toggles Content Security Policy Report Only support.
 	CSPReportOnlyEnabled bool
 	// CSPReportOnlyTemplate contains the Content Security Policy Report Only template.
-	CSPReportOnlyTemplate            string
-	AngularSupportEnabled            bool
-	DisableFrontendSandboxForPlugins []string
-	DisableGravatar                  bool
-	DataProxyWhiteList               map[string]bool
-	ActionsAllowPostURL              string
+	CSPReportOnlyTemplate           string
+	AngularSupportEnabled           bool
+	EnableFrontendSandboxForPlugins []string
+	DisableGravatar                 bool
+	DataProxyWhiteList              map[string]bool
+	ActionsAllowPostURL             string
 
 	TempDataLifetime time.Duration
 
@@ -263,6 +263,7 @@ type Cfg struct {
 
 	// OAuth
 	OAuthAutoLogin                       bool
+	OAuthLoginErrorMessage               string
 	OAuthCookieMaxAge                    int
 	OAuthAllowInsecureEmailLookup        bool
 	OAuthRefreshTokenServerLockMinWaitMs int64
@@ -1554,10 +1555,10 @@ func readSecuritySettings(iniFile *ini.File, cfg *Cfg) error {
 	cfg.CSPReportOnlyEnabled = security.Key("content_security_policy_report_only").MustBool(false)
 	cfg.CSPReportOnlyTemplate = security.Key("content_security_policy_report_only_template").MustString("")
 
-	disableFrontendSandboxForPlugins := security.Key("disable_frontend_sandbox_for_plugins").MustString("")
-	for _, plug := range strings.Split(disableFrontendSandboxForPlugins, ",") {
+	enableFrontendSandboxForPlugins := security.Key("enable_frontend_sandbox_for_plugins").MustString("")
+	for _, plug := range strings.Split(enableFrontendSandboxForPlugins, ",") {
 		plug = strings.TrimSpace(plug)
-		cfg.DisableFrontendSandboxForPlugins = append(cfg.DisableFrontendSandboxForPlugins, plug)
+		cfg.EnableFrontendSandboxForPlugins = append(cfg.EnableFrontendSandboxForPlugins, plug)
 	}
 
 	if cfg.CSPEnabled && cfg.CSPTemplate == "" {
@@ -1621,6 +1622,8 @@ func readAuthSettings(iniFile *ini.File, cfg *Cfg) (err error) {
 		cfg.Logger.Warn("[Deprecated] The oauth_auto_login configuration setting is deprecated. Please use auto_login inside auth provider section instead.")
 	}
 
+	// Default to the translation key used in the frontend
+	cfg.OAuthLoginErrorMessage = valueAsString(auth, "oauth_login_error_message", "oauth.login.error")
 	cfg.OAuthCookieMaxAge = auth.Key("oauth_state_cookie_max_age").MustInt(600)
 	cfg.OAuthRefreshTokenServerLockMinWaitMs = auth.Key("oauth_refresh_token_server_lock_min_wait_ms").MustInt64(1000)
 	cfg.SignoutRedirectUrl = valueAsString(auth, "signout_redirect_url", "")
