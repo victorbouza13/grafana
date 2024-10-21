@@ -12,7 +12,6 @@ const { merge } = require('webpack-merge');
 const WebpackBar = require('webpackbar');
 
 const getEnvConfig = require('./env-util.js');
-const GenerateSelectorsPlugin = require('./plugins/GenerateSelectorsPlugin.js');
 const common = require('./webpack.common.js');
 const esbuildTargets = resolveToEsbuildTarget(browserslist(), { printUnknownTargets: false });
 // esbuild-loader 3.0.0+ requires format to be set to prevent it
@@ -106,7 +105,6 @@ module.exports = (env = {}) => {
     },
 
     plugins: [
-      new GenerateSelectorsPlugin(),
       parseInt(env.noTsCheck, 10)
         ? new DefinePlugin({}) // bogus plugin to satisfy webpack API
         : new ForkTsCheckerWebpackPlugin({
