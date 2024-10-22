@@ -1,31 +1,27 @@
-import { gte, rcompare, valid } from 'semver';
+import { last } from 'lodash';
+import { gte, compare, valid } from 'semver';
 
-import { VersionedComponents, versionedComponents } from './selectors/components';
-import { VersionedPages, versionedPages } from './selectors/pages';
 import {
   FunctionSelector,
   Selectors,
   SelectorsOf,
   StringSelector,
-  VersionedFunctionSelector,
   VersionedSelectorGroup,
   VersionedSelectors,
-  VersionedStringSelector,
+  CssSelector,
+  UrlSelector,
 } from './types';
 
 /**
  * Resolves selectors based on the Grafana version
  */
-export function resolveSelectors(grafanaVersion = 'latest'): {
-  pages: SelectorsOf<VersionedPages>;
-  components: SelectorsOf<VersionedComponents>;
-} {
+export function resolveSelectors<T extends Selectors>(
+  versionedSelectors: VersionedSelectorGroup,
+  grafanaVersion = 'latest'
+): SelectorsOf<T> {
   const version = grafanaVersion.replace(/\-.*/, '');
 
-  return {
-    components: resolveSelectorGroup(versionedComponents, version),
-    pages: resolveSelectorGroup(versionedPages, version),
-  };
+  return resolveSelectorGroup(versionedSelectors, version);
 }
 
 function resolveSelectorGroup<T extends Selectors>(
@@ -35,42 +31,15 @@ function resolveSelectorGroup<T extends Selectors>(
   const result: Selectors = {};
 
   for (const [key, value] of Object.entries(group)) {
-    if (isVersionedStringSelector(value)) {
-      result[key] = resolveStringSelector(value, grafanaVersion);
-    }
-
-    if (isVersionedFunctionSelector(value)) {
-      result[key] = resolveFunctionSelector(value, grafanaVersion);
-    }
-
     if (isVersionedSelectorGroup(value)) {
       result[key] = resolveSelectorGroup(value, grafanaVersion);
+    } else {
+      assertIsSemverValid(value, key);
+      result[key] = resolveSelector(value, grafanaVersion);
     }
   }
 
   return result as SelectorsOf<T>;
-}
-
-function isVersionedFunctionSelector(
-  target: VersionedSelectors | VersionedSelectorGroup
-): target is VersionedFunctionSelector {
-  if (typeof target === 'object') {
-    const [first] = Object.keys(target);
-    return !!valid(first) && typeof target[first] === 'function';
-  }
-
-  return false;
-}
-
-function isVersionedStringSelector(
-  target: VersionedSelectors | VersionedSelectorGroup
-): target is VersionedStringSelector {
-  if (typeof target === 'object') {
-    const [first] = Object.keys(target);
-    return !!valid(first) && typeof target[first] === 'string';
-  }
-
-  return false;
 }
 
 function isVersionedSelectorGroup(
@@ -84,37 +53,32 @@ function isVersionedSelectorGroup(
   return false;
 }
 
-function resolveStringSelector(versionedSelector: VersionedStringSelector, grafanaVersion: string): StringSelector {
-  let [versionToUse, ...versions] = Object.keys(versionedSelector).sort(rcompare);
+function resolveSelector(
+  versionedSelector: VersionedSelectors,
+  grafanaVersion: string
+): StringSelector | FunctionSelector | CssSelector | UrlSelector {
+  let versionToUse;
+  let versions = Object.keys(versionedSelector).sort(compare);
 
   if (grafanaVersion === 'latest') {
-    return versionedSelector[versionToUse];
+    return versionedSelector[last(versions) || versions[0]];
   }
 
   for (const version of versions) {
-    if (gte(version, grafanaVersion)) {
+    if (gte(grafanaVersion, version)) {
       versionToUse = version;
     }
+  }
+
+  if (!versionToUse) {
+    versionToUse = last(versions) || versions[0];
   }
 
   return versionedSelector[versionToUse];
 }
 
-function resolveFunctionSelector(
-  versionedSelector: VersionedFunctionSelector,
-  grafanaVersion: string
-): FunctionSelector {
-  let [versionToUse, ...versions] = Object.keys(versionedSelector).sort(rcompare);
-
-  if (grafanaVersion === 'latest') {
-    return versionedSelector[versionToUse];
+function assertIsSemverValid(versionedSelector: VersionedSelectors, selectorName: string) {
+  if (!Object.keys(versionedSelector).every((version) => valid(version))) {
+    throw new Error(`Invalid semver version: '${selectorName}'`);
   }
-
-  for (const version of versions) {
-    if (gte(version, grafanaVersion)) {
-      versionToUse = version;
-    }
-  }
-
-  return versionedSelector[versionToUse];
 }
