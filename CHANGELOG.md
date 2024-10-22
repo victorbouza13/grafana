@@ -1,3 +1,59 @@
+<!-- 11.1.7+security-01 START -->
+
+# 11.1.7+security-01 (2024-10-17)
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.1.7+security-01 END -->
+<!-- 11.2.2+security-01 START -->
+
+# 11.2.2+security-01 (2024-10-17)
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.2.2+security-01 END -->
+<!-- 11.2.1+security-01 START -->
+
+# 11.2.1+security-01 (2024-10-17)
+
+### Features and enhancements
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.2.1+security-01 END -->
+<!-- 11.1.6+security-01 START -->
+
+# 11.1.6+security-01 (2024-10-17)
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.1.6+security-01 END -->
+<!-- 11.0.6+security-01 START -->
+
+# 11.0.6+security-01 (2024-10-17)
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.0.6+security-01 END -->
+<!-- 11.0.5+security-01 START -->
+
+# 11.0.5+security-01 (2024-10-17)
+
+### Bug fixes
+
+- **SQL Expressions**: Fixes CVE-2024-9264
+
+<!-- 11.0.5+security-01 END -->
 <!-- 11.2.2 START -->
 
 # 11.2.2 (2024-10-01)
@@ -73,6 +129,16 @@
 - **Correlations:** Limit access to correlations page to users who can access Explore [#93673](https://github.com/grafana/grafana/pull/93673), [@ifrost](https://github.com/ifrost)
 
 <!-- 10.4.10 END -->
+<!-- 10.3.12 START -->
+
+# 10.3.12 (2024-10-22)
+
+### Bug fixes
+
+- **Alerting:** Fix incorrect permission on POST external rule groups endpoint [CVE-2024-8118] [#93945](https://github.com/grafana/grafana/pull/93945), [@alexweav](https://github.com/alexweav)
+- **Dashboard:** Make dashboard search faster [#94704](https://github.com/grafana/grafana/pull/94704), [@knuzhdin](https://github.com/knuzhdin)
+
+<!-- 10.3.12 END -->
 <!-- 10.3.11 START -->
 
 # 10.3.11 (2024-10-01)
