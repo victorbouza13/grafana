@@ -5,7 +5,7 @@ The selectors defined in [pages.ts](./pages.ts) and [components.ts](./components
 ## How to change the value of an existing selector
 
 1. Find the versioned selector object in [pages.ts](./pages.ts) or [components.ts](./components.ts).
-2. Add a new key representing the minimum Grafana version. The version you specify should correspond to the version of Grafana where this change will be released. In most cases, you can check the version specified in package.json of the main branch (`git show main:package.json | awk -F'"' '/"version": ".+"/{ print $4; exit; }'`), but if you know in advance that your change will be backported you can specify the version of the release with the lowest version number. The version you specify should not include tags such as `-pre` or build number.
+2. Add a new key representing the minimum Grafana version. The version you specify should correspond to the version of Grafana where your changes will be released. In most cases, you can check the version specified in package.json of the main branch (`git show main:package.json | awk -F'"' '/"version": ".+"/{ print $4; exit; }'`), but if you know in advance that your change will be backported you can specify the version of the release with the lowest version number. The version you specify should not include tags such as `-pre` or build number.
 3. Add a value for the selector. Remember that the selector needs to be backwards compatible, so you cannot change its signature.
 
 ## How to add a new selector
