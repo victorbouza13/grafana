@@ -225,6 +225,8 @@ export const Combobox = <T extends string | number>({
 
   const InputComponent = width === 'auto' ? AutoSizeInput : Input;
 
+  const accessoryIcon = asyncLoading ? 'spinner' : isOpen ? 'search' : 'angle-down';
+
   return (
     <div>
       <InputComponent
@@ -249,7 +251,7 @@ export const Combobox = <T extends string | number>({
               />
             )}
             <Icon
-              name={isOpen ? 'search' : 'angle-down'}
+              name={accessoryIcon}
               onClick={() => {
                 if (isOpen) {
                   closeMenu();
@@ -260,7 +262,6 @@ export const Combobox = <T extends string | number>({
             />
           </>
         }
-        loading={asyncLoading}
         {...restProps}
         {...getInputProps({
           ref: inputRef,
