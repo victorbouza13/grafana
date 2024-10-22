@@ -156,6 +156,7 @@ export const Combobox = <T extends string | number>({
       onChange(selectedItem);
     },
     defaultHighlightedIndex: selectedItemIndex ?? 0,
+
     scrollIntoView: () => {},
     onInputValueChange: ({ inputValue }) => {
       const customValueOption =
@@ -223,9 +224,18 @@ export const Combobox = <T extends string | number>({
     setInputValue(selectedItem?.label ?? value?.toString() ?? '');
   }, [selectedItem, setInputValue, value]);
 
+  const handleSuffixClick = useCallback(() => {
+    isOpen ? closeMenu() : openMenu();
+  }, [isOpen, openMenu, closeMenu]);
+
   const InputComponent = width === 'auto' ? AutoSizeInput : Input;
 
-  const accessoryIcon = asyncLoading ? 'spinner' : isOpen ? 'search' : 'angle-down';
+  const suffixIcon = asyncLoading
+    ? 'spinner'
+    : // If it's loading, show loading icon. Otherwise, icon indicating menu state
+      isOpen
+      ? 'search'
+      : 'angle-down';
 
   return (
     <div>
@@ -250,16 +260,12 @@ export const Combobox = <T extends string | number>({
                 }}
               />
             )}
-            <Icon
-              name={accessoryIcon}
-              onClick={() => {
-                if (isOpen) {
-                  closeMenu();
-                } else {
-                  openMenu();
-                }
-              }}
-            />
+
+            {/* When you click the input, it should just focus the text box. However, clicks on input suffix arent
+                translated to the input, so it blocks the input from being focused. So we need an additional event
+                handler here to open/close the menu. It should not have button role because we intentionally don't
+                want it in the a11y tree. */}
+            <Icon name={suffixIcon} onClick={handleSuffixClick} />
           </>
         }
         {...restProps}
@@ -274,7 +280,6 @@ export const Combobox = <T extends string | number>({
           'aria-labelledby': ariaLabelledBy, // Label should be handled with the Field component
         })}
       />
-
       <div
         className={cx(styles.menu, !isOpen && styles.menuClosed)}
         style={{
