@@ -9,6 +9,7 @@ import {
   VersionedSelectors,
   CssSelector,
   UrlSelector,
+  FunctionSelector2,
 } from './types';
 
 /**
@@ -55,7 +56,7 @@ function isVersionedSelectorGroup(
 function resolveSelector(
   versionedSelector: VersionedSelectors,
   grafanaVersion: string
-): StringSelector | FunctionSelector | CssSelector | UrlSelector {
+): StringSelector | FunctionSelector | FunctionSelector2 | CssSelector | UrlSelector {
   let versionToUse;
   let versions = Object.keys(versionedSelector).sort(compare);
 
