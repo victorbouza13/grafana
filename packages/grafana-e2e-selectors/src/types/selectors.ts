@@ -7,7 +7,7 @@ export type StringSelector = string;
 /**
  * A function selector with an argument
  */
-export type FunctionSelector = (id: string) => string;
+export type FunctionSelector = (...args: string[]) => string;
 
 /**
  * A function selector without argument

@@ -1,4 +1,3 @@
-import { last } from 'lodash';
 import { gte, compare, valid } from 'semver';
 
 import {
@@ -61,7 +60,7 @@ function resolveSelector(
   let versions = Object.keys(versionedSelector).sort(compare);
 
   if (grafanaVersion === 'latest') {
-    return versionedSelector[last(versions) || versions[0]];
+    return versionedSelector[versions[versions.length - 1]];
   }
 
   for (const version of versions) {
@@ -71,7 +70,7 @@ function resolveSelector(
   }
 
   if (!versionToUse) {
-    versionToUse = last(versions) || versions[0];
+    versionToUse = versions[versions.length - 1];
   }
 
   return versionedSelector[versionToUse];

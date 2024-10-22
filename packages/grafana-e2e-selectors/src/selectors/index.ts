@@ -11,4 +11,14 @@ const selectors = { pages: Pages, components: Components };
 /**
  * Exposes Pages, Component selectors and E2ESelectors type in package for easy use in e2e tests and in production code
  */
-export { Pages, Components, selectors, resolveSelectors, type E2ESelectors };
+export {
+  Pages,
+  Components,
+  selectors,
+  versionedComponents,
+  versionedPages,
+  resolveSelectors,
+  type VersionedPages,
+  type VersionedComponents,
+  type E2ESelectors,
+};
